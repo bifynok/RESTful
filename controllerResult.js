@@ -1,43 +1,55 @@
 const db = require('./database');
 
-const getAllResultData = (req, res) => {
+const getAllResultData = async (req, res) => {
+  try {
     const query = 'SELECT * FROM ResultData';
-    db.query(query, (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
-  };
-  
-  const getResultDataById = (req, res) => {
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getResultDataById = async (req, res) => {
+  try {
     const id = req.params.id;
-    const query = `SELECT * FROM ResultData WHERE id = ${id}`;
-    db.query(query, (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
-  };
-  
-  const createResultData = (req, res) => {
+    const query = 'SELECT * FROM ResultData WHERE id = ?';
+    const [results] = await db.query(query, [id]);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const createResultData = async (req, res) => {
+  try {
     const newResultData = req.body;
     const query = 'INSERT INTO ResultData SET ?';
-    db.query(query, newResultData, (err, results) => {
-      if (err) throw err;
-      res.json({ id: results.insertId, ...newResultData });
-    });
-  };
-  
-  const deleteResultData = (req, res) => {
-    const id = req.params.id;
-    const query = `DELETE FROM ResultData WHERE id = ${id}`;
-    db.query(query, (err) => {
-      if (err) throw err;
-      res.json({ id, message: 'ResultData видалено успішно.' });
-    });
-  };
+    const [results] = await db.query(query, [newResultData]);
+    res.json({ id: results.insertId, ...newResultData });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-  module.exports = {
-    getAllResultData,
-    getResultDataById,
-    createResultData,
-    deleteResultData
-  };
+const deleteResultData = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = 'DELETE FROM ResultData WHERE id = ?';
+    await db.query(query, [id]);
+    res.json({ id, message: 'ResultData видалено успішно.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = {
+  getAllResultData,
+  getResultDataById,
+  createResultData,
+  deleteResultData
+};

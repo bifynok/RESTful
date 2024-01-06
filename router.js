@@ -8,59 +8,64 @@ const review = require('./controllerReview');
 const result = require('./controllerResult');
 
 //Routes for "Roles"
-router.get('/roles', role.getAllRoles);
-
-router.get('/roles/:id', role.getRoleById);
+router
+    .route('/roles')
+    .get(role.getAllRoles);
+router
+    .route('/roles/:id')
+    .get(role.getRoleById);
 
 //Routes for "User"
-router.get('/users', user.getAllUsers);
-
-router.get('/users/:id', user.getUserById);
-
-router.post('/users', user.createUser);
-
-router.delete('/users/:id', user.deleteUser);
-
-router.patch('/users/:id', user.updateUser);
+router
+    .route('/users')
+    .get(user.getAllUsers)
+    .post(user.createUser);
+router
+    .route('/users/:id')
+    .get(user.getUserById)
+    .delete(user.deleteUser)
+    .patch(user.updateUser);
 
 //Routes for "MetionReport"
-router.get('/mention-reports', report.getAllMentionReports);
-
-router.get('/mention-reports/:id', report.getMentionReportById);
-
-router.post('/mention-reports', report.createMentionReport);
-
-router.delete('/mention-reports/:id', report.deleteMentionReport);
-
-router.patch('/mention-reports/:id', report.updateMentionReport);
+router
+    .route('/mention-reports')
+    .get(report.getAllMentionReports)
+    .post(report.createMentionReport)
+router
+    .route('/mention-reports/:id')
+    .get(report.getMentionReportById)
+    .delete(report.deleteMentionReport)
+    .patch(report.updateMentionReport);
 
 //Routes for "PubRequests"
-router.get('/pub-requests', request.getAllPubRequests);
-
-router.get('/pub-requests/:id', request.getPubRequestById);
-
-router.post('/pub-requests', request.createPubRequst);
-
-router.delete('/pub-requests/:id', request.deletePubRequest);
+router
+    .route('/pub-requests')   
+    .get(request.getAllPubRequests)
+    .post(request.createPubRequst);
+router
+    .route('/pub-requests/:id')
+    .get(request.getPubRequestById)
+    .delete(request.deletePubRequest);
 
 //Routes for "PubReview"
-router.get('/pub-reviews', review.getAllPubReview);
-
-router.get('/pub-reviews/:id', review.getPubReviewById);
-
-router.post('/pub-reviews', review.createPubReview);
-
-router.delete('/pub-reviews/:id', review.deletePubReview);
-
-router.patch('/pub-reviews/:id', review.updatePubReview);
+router
+    .route('/pub-reviews')
+    .get(review.getAllPubReview)
+    .post(review.createPubReview);
+router
+    .route('/pub-reviews/:id')
+    .get(review.getPubReviewById)
+    .delete(review.deletePubReview)
+    .patch(review.updatePubReview);
 
 //Routes for "ResultsData"
-router.get('/result-data', result.getAllResultData);
-
-router.get('/result-data/:id', result.getResultDataById);
-
-router.post('/result-data', result.createResultData);
-
-router.delete('/result-data/:id', result.deleteResultData);
+router
+    .route('/result-data')
+    .get(result.getAllResultData)
+    .post(result.createResultData);
+router
+    .route('/result-data/:id')
+    .get(result.getResultDataById)
+    .delete(result.deleteResultData);
 
 module.exports = router;

@@ -1,43 +1,55 @@
 const db = require('./database');
 
-const getAllPubRequests = (req, res) => {
+const getAllPubRequests = async (req, res) => {
+  try {
     const query = 'SELECT * FROM PubRequest';
-    db.query(query, (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
-  };
-  
-  const getPubRequestById = (req, res) => {
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getPubRequestById = async (req, res) => {
+  try {
     const id = req.params.id;
-    const query = `SELECT * FROM PubRequest WHERE User_id = ${id}`;
-    db.query(query, (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
-  };
-  
-  const createPubRequst = (req, res) => {
+    const query = 'SELECT * FROM PubRequest WHERE User_id = ?';
+    const [results] = await db.query(query, [id]);
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const createPubRequst = async (req, res) => {
+  try {
     const newPubRequest = req.body;
     const query = 'INSERT INTO PubRequest SET ?';
-    db.query(query, newPubRequest, (err, results) => {
-      if (err) throw err;
-      res.json({ id: results.insertId, ...newPubRequest });
-    });
-  };
-  
-  const deletePubRequest = (req, res) => {
-    const id = req.params.id;
-    const query = `DELETE FROM PubRequest WHERE User_id = ${id}`;
-    db.query(query, (err) => {
-      if (err) throw err;
-      res.json({ id, message: 'PubRequest видалено успішно.' });
-    });
-  };
+    const [results] = await db.query(query, [newPubRequest]);
+    res.json({ id: results.insertId, ...newPubRequest });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-  module.exports = {
-    getAllPubRequests,
-    getPubRequestById,
-    createPubRequst,
-    deletePubRequest
-  };
+const deletePubRequest = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = 'DELETE FROM PubRequest WHERE User_id = ?';
+    await db.query(query, [id]);
+    res.json({ id, message: 'PubRequest видалено успішно.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = {
+  getAllPubRequests,
+  getPubRequestById,
+  createPubRequst,
+  deletePubRequest
+};
